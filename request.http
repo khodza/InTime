@@ -1,0 +1,16 @@
+### List of Bookclient
+ GET http://localhost:3000/api/v1/bookusers
+### Get specific Bookclient
+ GET http://localhost:3000/api/v1/bookusers/63c1e1d1d557ba29d96684cd
+
+### Create Bookclient
+ POST  http://localhost:3000/api/v1/bookusers
+Content-Type: application/json
+
+{
+    "clientName":"Makhmudkhodzaev Izzat",
+    "clientNumber":"977622003",
+    "description":"19 yosh"
+}
+### Delete Bookclient
+ DELETE  http://localhost:3000/api/v1/bookusers/63c1e1d1d557ba29d96684cd
