@@ -5,6 +5,12 @@ const AppError = require('../utils/appError');
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    if (
+      !req.body.clientNumber.startsWith('+998') ||
+      req.body.clientNumber.length !== 11
+    ) {
+      next(new AppError(`To'g'ri raqam kiriting`, 400));
+    }
     const doc = await Model.create(req.body);
 
     res.status(200).json({
