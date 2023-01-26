@@ -9,6 +9,8 @@ process.on('uncaughtException', (err) => {
 });
 
 dotenv.config({ path: './config.env' });
+require('./telegramBot/actions');
+require('./telegramBot/core');
 
 const app = require('./app');
 
