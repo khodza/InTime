@@ -18,7 +18,7 @@ composer.start((ctx) => {
 composer.help((ctx) => {
   if (!makePrivate.makePrivate(ctx)) return;
   ctx.replyWithHTML(
-    `Ushbu bot <i><b>intime.uz</b></i> saytining Admin🕹 paneli\n\n<b>Botni ishlatish uchun</b> /start  <b>kamandasidan foydalaning</b>`
+    `Ushbu bot <i><b>asadbekashurov.uz</b></i> saytining Admin🕹 paneli\n\n<b>Botni ishlatish uchun</b> /start  <b>kamandasidan foydalaning</b>`
   );
 });
 
