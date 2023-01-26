@@ -2,16 +2,13 @@ const mongoose = require('mongoose');
 
 mongoose.set('strictQuery', false);
 const bookclientSchema = new mongoose.Schema({
-  clientName: {
+  klient: {
     type: String,
     required: [true, `Ismingizni kiriting`],
   },
-  clientNumber: {
+  tel_raqam: {
     type: String,
     required: [true, 'Telefon raqamingizni kiriting'],
-  },
-  description: {
-    type: String,
   },
   addedAt: {
     type: Date,

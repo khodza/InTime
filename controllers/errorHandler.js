@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const AppError = require('../utils/appError');
 
 const handleCastError = function (err) {
@@ -9,6 +10,7 @@ const handleDuplicateFields = function (err) {
   const message = `Dublikat qiymat ${err.keyValue.name}.Iltimos boshqa qiymat kiriting`;
   return new AppError(message, 404);
 };
+
 const handleValidationErrorDB = function (err) {
   const errors = Object.values(err.errors).map((el) => el.message);
   const message = `Yaroqsiz data. ${errors.join('. ')}`;
@@ -23,7 +25,6 @@ const sendErrorDev = function (err, res) {
     stack: err.stack,
   });
 };
-
 const sendErrorProd = function (err, res) {
   if (err.isOperational) {
     // catches all the expected errors
@@ -43,28 +44,18 @@ const sendErrorProd = function (err, res) {
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
-
   if (process.env.NODE_ENV === 'development') {
-    console.log(err);
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = { ...err };
-    if (error.name === 'CastError') {
-      // err-example:searching for product with invalid id
-      error = handleCastError(error);
+    if (err.name === 'CastError') {
+      err = handleCastError(err);
     }
-    if (error.code === 11000) {
-      error = handleDuplicateFields(error);
+    if (err.code === 11000) {
+      err = handleDuplicateFields(err);
     }
-    if (error._message === 'Validation failed') {
-      error = handleValidationErrorDB(error);
+    if (err._message === 'Validation failed') {
+      err = handleValidationErrorDB(err);
     }
-    // if (error.name === 'JsonWebTokenError') {
-    //   error = handleJWTError();
-    // }
-    // if (error.name === 'TokenExpiredError') {
-    //   error = handleExpiredToken();
-    // }
-    sendErrorProd(error, res);
+    sendErrorProd(err, res);
   }
 };

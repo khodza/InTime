@@ -1,14 +1,11 @@
 const router = require('express').Router();
 const bookclientController = require('../controllers/bookclientController');
 
+router.route('/').post(bookclientController.addBookclient);
 router
-  .route('/')
-  .get(bookclientController.getAllBookclients)
-  .post(bookclientController.addBookclient);
-
-router
-  .route('/:id')
-  .get(bookclientController.getBookclient)
-  .delete(bookclientController.deleteBookclient);
-
+  .route('/tolov')
+  .post(
+    bookclientController.uploadPhoto.single('image'),
+    bookclientController.addPayedclient
+  );
 module.exports = router;

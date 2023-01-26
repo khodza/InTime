@@ -1,7 +1,8 @@
 const bot = require('../core/bot');
 
 module.exports.makePrivate = function (ctx) {
-  if (process.env.BOT_ADMINS.includes(ctx.chat.id)) {
+  const admins = process.env.BOT_ADMINS.split('/').map((el) => +el);
+  if (admins.includes(ctx.chat.id)) {
     return true;
   }
   bot.telegram.sendMessage(

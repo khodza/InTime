@@ -1,17 +1,21 @@
 const mongoose = require('mongoose');
 
 mongoose.set('strictQuery', false);
-const courseclientSchema = new mongoose.Schema({
-  clientName: {
+const paidClient = new mongoose.Schema({
+  klient: {
     type: String,
     required: [true, `Ismingizni kiriting`],
   },
-  clientNumber: {
+  tel_raqam: {
     type: String,
     required: [true, 'Telefon raqamingizni kiriting'],
   },
-  description: {
+  userName: {
     type: String,
+  },
+  file: {
+    type: String,
+    required: [true, 'Chekni yuklang!'],
   },
   addedAt: {
     type: Date,
@@ -19,5 +23,5 @@ const courseclientSchema = new mongoose.Schema({
   },
 });
 
-const Courseclient = mongoose.model('Courseclient', courseclientSchema);
-module.exports = Courseclient;
+const PaidClient = mongoose.model('PaidClient', paidClient);
+module.exports = PaidClient;

@@ -1,7 +1,5 @@
 const { Composer, Markup } = require('telegraf');
-const Bookclient = require('../../modules/bookclientModule');
 const Paidclient = require('../../modules/paidModule');
-
 const bot = require('../core/bot');
 
 const { makePrivate } = require('./makePrivate');
@@ -15,35 +13,35 @@ const {
 
 const composer = new Composer();
 
-composer.command('royhatdan_otilganlar', async (ctx) => {
+composer.command('tolov_qilganlar', async (ctx) => {
   if (!makePrivate(ctx)) return;
 
   ctx.replyWithHTML(
-    `Saytdan ro'yhatdan o'tkanlarni malumotlarini olishni yo'lini tanlang`,
+    `Saytdan to'lov qilganlarni malumotlarini olishni yo'lini tanlang`,
 
     Markup.inlineKeyboard([
       [
         Markup.button.callback(
-          `🕐🌃 24 soat  ichida ro'yhatdan o'tkanlar`,
-          'last24hours'
+          `🕐🌃 24 soat  ichida to'lov qilganlar`,
+          'tolov_last24hours'
         ),
       ],
       [
         Markup.button.callback(
-          `🕓⤴️ O'tkan hafta ichida ro'yhatdan o'tkanlar`,
-          'lastweek'
+          `🕓⤴️ O'tkan hafta ichida to'lov qilganlar`,
+          'tolov_lastweek'
         ),
       ],
       [
         Markup.button.callback(
-          `🕓🌙 O'tkan oy ichida ro'yhatdan o'tkanlar`,
-          'lastmonth'
+          `🕓🌙 O'tkan oy ichida to'lov qilganlar`,
+          'tolov_lastmonth'
         ),
       ],
       [
         Markup.button.callback(
           `📗 Barcha ro'yhatdan o'tkanlar (excel)`,
-          'allregistred'
+          'tolov_allregistred'
         ),
       ],
     ])
@@ -53,15 +51,7 @@ composer.command('royhatdan_otilganlar', async (ctx) => {
 composer.on(`callback_query`, async (ctx) => {
   const callbackData = ctx.callbackQuery.data;
 
-  if (callbackData.startsWith('allregistred')) {
-    await getAllRegClients(ctx, Bookclient);
-  } else if (callbackData.startsWith('last24hours')) {
-    await getLast24(ctx, Bookclient);
-  } else if (callbackData.startsWith('lastweek')) {
-    await getLastWeek(ctx, Bookclient);
-  } else if (callbackData.startsWith('lastmonth')) {
-    await getLastMonth(ctx, Bookclient);
-  } else if (callbackData.startsWith('tolov_allregistred')) {
+  if (callbackData.startsWith('tolov_allregistred')) {
     await getAllRegClients(ctx, Paidclient);
   } else if (callbackData.startsWith('tolov_last24hours')) {
     await getLast24(ctx, Paidclient);

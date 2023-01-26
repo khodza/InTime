@@ -8,9 +8,8 @@
 Content-Type: application/json
 
 {
-    "clientName":"Ulug'bek",
-    "clientNumber":"+9989776220034",
-    "description":"19 yosh"
+    "klient":"Ulug'bek",
+    "tel_raqam":"+998977622003",
 }
 ### Delete Bookclient
  DELETE  http://localhost:3000/api/v1/bookusers/63c1e1d1d557ba29d96684cd

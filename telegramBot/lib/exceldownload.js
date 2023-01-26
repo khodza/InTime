@@ -8,6 +8,7 @@ module.exports.downloadExcel = async (
   sortOpt,
   fileName
 ) => {
+  ctx.telegram.sendChatAction(ctx.chat.id, 'upload_document');
   const wb = XLSX.utils.book_new();
   const clients = await Model.aggregate([
     { $match: matchOpt },
@@ -24,4 +25,5 @@ module.exports.downloadExcel = async (
   ctx.telegram.sendDocument(ctx.chat.id, {
     source: `${__dirname}/../../data/excel/${fileName}`,
   });
+  ctx.answerCbQuery();
 };
