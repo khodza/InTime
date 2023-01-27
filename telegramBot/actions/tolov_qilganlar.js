@@ -40,7 +40,7 @@ composer.command('tolov_qilganlar', async (ctx) => {
       ],
       [
         Markup.button.callback(
-          `📗 Barcha ro'yhatdan o'tkanlar (excel)`,
+          `📗 Barcha to'lov qilganlar (excel)`,
           'tolov_allregistred'
         ),
       ],

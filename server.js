@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 
 const dotenv = require('dotenv');
 
-process.on('uncaughtException', (err) => {
-  console.log(err.name, err.message);
-  console.log('Unhandled Rejection * . Shutting down!');
-  process.exit(1);
-});
-
 dotenv.config({ path: './config.env' });
 require('./telegramBot/actions');
 require('./telegramBot/core');
-
 const app = require('./app');
+
+process.on('uncaughtException', (err) => {
+  console.log(err, '111');
+  // console.log(err.name, err.message);
+  console.log('Unhandled Rejection * . Shutting down!');
+  process.exit(1);
+});
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',

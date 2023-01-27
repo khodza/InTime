@@ -41,10 +41,16 @@ const sendErrorProd = function (err, res) {
   }
 };
 
+const handleMulterFileSizeError = function (err) {
+  const message = `File hajimi maximum 10 mb`;
+  return new AppError(message, 400);
+};
+
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
   if (process.env.NODE_ENV === 'development') {
+    console.log(err);
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     if (err.name === 'CastError') {
@@ -56,6 +62,11 @@ module.exports = (err, req, res, next) => {
     if (err._message === 'Validation failed') {
       err = handleValidationErrorDB(err);
     }
+
+    if (err.code === 'LIMIT_FILE_SIZE' || err.message === 'File too large') {
+      err = handleMulterFileSizeError(err);
+    }
+
     sendErrorProd(err, res);
   }
 };

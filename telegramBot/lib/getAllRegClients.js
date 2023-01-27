@@ -14,7 +14,9 @@ function getAllRegClients(ctx, Model) {
       _id: { $exists: true },
     },
     { addedAt: -1 },
-    'Barcha-royhatdan-otkanlar.xlsx'
+    Model === Bookclient
+      ? 'Barcha-royhatdan-otkanlar.xlsx'
+      : 'Barcha-tolov-qilganlar.xlsx'
   );
 }
 
