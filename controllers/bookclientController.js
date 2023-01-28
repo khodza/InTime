@@ -10,7 +10,6 @@ const admins = process.env.BOT_ADMINS.split('/');
 const { ADMIN } = process.env;
 
 exports.addBookclient = catchAsync(async (req, res, next) => {
-  req.body.voqti = `${new Date().toLocaleString()}`;
   const doc = await Bookclient.create(req.body);
   res.status(200).json({
     status: 'success',
@@ -46,7 +45,6 @@ exports.addPayedclient = catchAsync(async (req, res, next) => {
   if (!req.file) {
     next(new AppError(`Chek rasimini joylang!`, 400));
   }
-  req.body.voqti = `${new Date().toLocaleString()}`;
   const doc = await PaidClient.create(req.body);
   req.id = doc.id;
   res.status(200).json({
