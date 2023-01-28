@@ -6,33 +6,67 @@ const bot = require('../telegramBot/core/bot');
 const AppError = require('../utils/appError');
 const PaidClient = require('../modules/paidModule');
 
-const admins = process.env.BOT_ADMINS.split('/').map((el) => +el);
+const admins = process.env.BOT_ADMINS.split('/');
+const { ADMIN } = process.env;
 
 exports.addBookclient = catchAsync(async (req, res, next) => {
   const doc = await Bookclient.create(req.body);
-  admins.forEach((admin) => {
-    bot.telegram.sendMessage(
-      admin,
-      `<b>📌 Yangi klient saytdan ro'yhatdan o'tdi</b>\n\n👤 <i>Klient</i> :   <b>${
-        doc.klient
-      }</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${
-        doc.tel_raqam
-      }</code>\n\n🕓 <i>Voqti</i> :  ${doc.addedAt.toLocaleString()} `,
-      { parse_mode: 'HTML' }
-    );
-  });
-
   res.status(200).json({
     status: 'success',
     data: {
       doc,
     },
   });
+  next();
+});
+exports.sendMessageReg = catchAsync(async (req, res, next) => {
+  await bot.telegram.sendMessage(
+    ADMIN,
+    `<b>📌 Yangi klient saytdan ro'yhatdan o'tdi</b>\n\n👤 <i>Klient</i> :   <b>${
+      req.body.klient
+    }</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${
+      req.body.tel_raqam
+    }</code>\n\n🕓 <i>Voqti</i> :  ${new Date().toLocaleString()} `,
+    { parse_mode: 'HTML' }
+  );
+  admins.forEach(async (admin) => {
+    try {
+      await bot.telegram.sendMessage(
+        admin,
+        `<b>📌 Yangi klient saytdan ro'yhatdan o'tdi</b>\n\n👤 <i>Klient</i> :   <b>${
+          req.body.klient
+        }</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${
+          req.body.tel_raqam
+        }</code>\n\n🕓 <i>Voqti</i> :  ${new Date().toLocaleString()} `,
+        { parse_mode: 'HTML' }
+      );
+    } catch (err) {
+      bot.telegram.sendMessage(
+        process.env.ADMIN,
+        `💥💥💥 ERROR 💥💥💥  \n\n${JSON.stringify(err)}`
+      );
+    }
+  });
 });
 
 exports.addPayedclient = catchAsync(async (req, res, next) => {
+  if (!req.file) {
+    next(new AppError(`Chek rasimini joylang!`, 400));
+  }
+  const doc = await PaidClient.create(req.body);
+  req.id = doc.id;
+  res.status(200).json({
+    status: 'success',
+    data: {
+      doc,
+    },
+  });
+  next();
+});
+
+exports.sendMessagePayment = catchAsync(async (req, res, next) => {
   const msg = await bot.telegram.sendDocument(
-    +process.env.ADMIN,
+    ADMIN,
     {
       source: path.join(
         __dirname,
@@ -51,7 +85,6 @@ exports.addPayedclient = catchAsync(async (req, res, next) => {
       parse_mode: 'HTML',
     }
   );
-
   admins.forEach(async (admin) => {
     try {
       await bot.telegram.sendDocument(
@@ -75,16 +108,11 @@ exports.addPayedclient = catchAsync(async (req, res, next) => {
         }
       );
     } catch (err) {
-      await bot.telegram.sendMessage(+process.env.ADMIN, JSON.stringify(err));
+      await bot.telegram.sendMessage(ADMIN, JSON.stringify(err));
     }
   });
-  req.body.file = msg.document.file_id;
-  const doc = await PaidClient.create(req.body);
-  res.status(200).json({
-    status: 'success',
-    data: {
-      doc,
-    },
+  await PaidClient.findByIdAndUpdate(req.id, {
+    file: msg.document.file_id,
   });
 });
 
@@ -117,28 +145,3 @@ exports.uploadPhoto = multer({
   fileFilter,
   limits: { fileSize: 11534336 },
 });
-
-// exports.compressImage = function (req, res, next) {
-//   const compressImagePath = path.join(
-//     __dirname,
-//     '../data/compressed',
-//     `Chek.${req.file.mimetype.split('/')[1]}`
-//   );
-//   const image = sharp(
-//     path.join(
-//       __dirname,
-//       '../data/images',
-//       `check.${req.file.mimetype.split('/')[1]}`
-//     )
-//   );
-//   const imageCom = image.jpeg({
-//     quality: 20,
-//   });
-//   imageCom.toFile(compressImagePath, (err, info) => {
-//     if (err) {
-//       return new AppError('Compres qilishta error', 400);
-//     }
-//     console.log(info);
-//     next();
-//   });
-// };

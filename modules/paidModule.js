@@ -15,7 +15,6 @@ const paidClient = new mongoose.Schema({
   },
   file: {
     type: String,
-    required: [true, 'Chekni yuklang!'],
   },
   addedAt: {
     type: Date,
