@@ -13,7 +13,7 @@ module.exports.downloadExcel = async (
   const clients = await Model.aggregate([
     { $match: matchOpt },
     { $sort: sortOpt },
-    { $project: { _id: 0, id: 0, __v: 0 } },
+    { $project: { _id: 0, id: 0, __v: 0, addedAt: 0 } },
   ]);
 
   let temp = JSON.stringify(clients);

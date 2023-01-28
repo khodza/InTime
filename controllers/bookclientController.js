@@ -10,6 +10,7 @@ const admins = process.env.BOT_ADMINS.split('/');
 const { ADMIN } = process.env;
 
 exports.addBookclient = catchAsync(async (req, res, next) => {
+  req.body.voqti = `${new Date().toLocaleString()}`;
   const doc = await Bookclient.create(req.body);
   res.status(200).json({
     status: 'success',
@@ -22,22 +23,14 @@ exports.addBookclient = catchAsync(async (req, res, next) => {
 exports.sendMessageReg = catchAsync(async (req, res, next) => {
   await bot.telegram.sendMessage(
     ADMIN,
-    `<b>📌 Yangi klient saytdan ro'yhatdan o'tdi</b>\n\n👤 <i>Klient</i> :   <b>${
-      req.body.klient
-    }</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${
-      req.body.tel_raqam
-    }</code>\n\n🕓 <i>Voqti</i> :  ${new Date().toLocaleString()} `,
+    `<b>📌 Yangi klient saytdan ro'yhatdan o'tdi</b>\n\n👤 <i>Klient</i> :   <b>${req.body.klient}</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${req.body.tel_raqam}</code>\n\n🕓 <i>Voqti</i> :  ${req.body.voqti} `,
     { parse_mode: 'HTML' }
   );
   admins.forEach(async (admin) => {
     try {
       await bot.telegram.sendMessage(
         admin,
-        `<b>📌 Yangi klient saytdan ro'yhatdan o'tdi</b>\n\n👤 <i>Klient</i> :   <b>${
-          req.body.klient
-        }</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${
-          req.body.tel_raqam
-        }</code>\n\n🕓 <i>Voqti</i> :  ${new Date().toLocaleString()} `,
+        `<b>📌 Yangi klient saytdan ro'yhatdan o'tdi</b>\n\n👤 <i>Klient</i> :   <b>${req.body.klient}</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${req.body.tel_raqam}</code>\n\n🕓 <i>Voqti</i> :  ${req.body.voqti} `,
         { parse_mode: 'HTML' }
       );
     } catch (err) {
@@ -53,6 +46,7 @@ exports.addPayedclient = catchAsync(async (req, res, next) => {
   if (!req.file) {
     next(new AppError(`Chek rasimini joylang!`, 400));
   }
+  req.body.voqti = `${new Date().toLocaleString()}`;
   const doc = await PaidClient.create(req.body);
   req.id = doc.id;
   res.status(200).json({
@@ -75,13 +69,7 @@ exports.sendMessagePayment = catchAsync(async (req, res, next) => {
       ),
     },
     {
-      caption: `<b>\n\n✅Kitob sotildi va to'lov💸 amalga oshirildi</b>\n\n👤 <i>Klient</i> :   <b>${
-        req.body.klient
-      }</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${
-        req.body.tel_raqam
-      }</code>\n\n<i>📬 Telegram Username</i> :   ${
-        req.body.userName
-      }\n\n🕓 <i>Voqti</i> :  ${new Date().toLocaleString()} `,
+      caption: `<b>\n\n✅Kitob sotildi va to'lov💸 amalga oshirildi</b>\n\n👤 <i>Klient</i> :   <b>${req.body.klient}</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${req.body.tel_raqam}</code>\n\n<i>📬 Telegram Username</i> :   ${req.body.userName}\n\n🕓 <i>Voqti</i> :  ${req.body.voqti} `,
       parse_mode: 'HTML',
     }
   );
@@ -97,13 +85,7 @@ exports.sendMessagePayment = catchAsync(async (req, res, next) => {
           ),
         },
         {
-          caption: `<b>\n\n✅Kitob sotildi va to'lov💸 amalga oshirildi</b>\n\n👤 <i>Klient</i> :   <b>${
-            req.body.klient
-          }</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${
-            req.body.tel_raqam
-          }</code>\n\n<i>📬 Telegram Username</i> :   ${
-            req.body.userName
-          }\n\n🕓 <i>Voqti</i> :  ${new Date().toLocaleString()} `,
+          caption: `<b>\n\n✅Kitob sotildi va to'lov💸 amalga oshirildi</b>\n\n👤 <i>Klient</i> :   <b>${req.body.klient}</b>\n\n☎️ <i>Telefon raqami</i> :   <code>${req.body.tel_raqam}</code>\n\n<i>📬 Telegram Username</i> :   ${req.body.userName}\n\n🕓 <i>Voqti</i> :  ${req.body.voqti} `,
           parse_mode: 'HTML',
         }
       );

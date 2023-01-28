@@ -16,9 +16,12 @@ const paidClient = new mongoose.Schema({
   file: {
     type: String,
   },
+  voqti: {
+    type: String,
+  },
   addedAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
 });
 
